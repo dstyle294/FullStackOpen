@@ -51,4 +51,6 @@ const App = () => {
   )
 }
 
+// can make divs instead of line breaks - do separate divs
+
 export default App
