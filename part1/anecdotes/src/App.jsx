@@ -14,18 +14,39 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
 
+  const [votes, setVotes] = useState(new Uint32Array(anecdotes.length))
+
+
   const handleClick = () => {
     let num = Math.floor(Math.random() * (anecdotes.length))
     console.log('herfe')
     setSelected(num)
     console.log(num)
   }   
+
+  const handleVote = () => {
+    const copy = [...votes]
+    copy[selected] += 1
+
+    setVotes(copy) // this is what triggers re-render
+  }
+
    
   const [selected, setSelected] = useState(0)
+  const maxValue = Math.max(...votes)
+  const maxIndex = votes.indexOf(maxValue)
   return (
-    <div>
-      {anecdotes[selected]} <br />
+    <div> 
+      <h1>Anecdote of the day</h1>
+      <p>
+        {anecdotes[selected]} <br />
+        has {votes[selected]} votes
+      </p>
+      <button onClick = {handleVote}>vote</button>
       <button onClick = {handleClick}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      {anecdotes[maxIndex]} <br />
+      has {maxValue} votes
     </div>
   )
 }
