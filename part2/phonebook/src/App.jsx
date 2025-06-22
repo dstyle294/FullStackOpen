@@ -8,15 +8,19 @@ const Person = (person) => {
   )
 }
 
-const Persons = ({personsToShow, searching, persons}) => {
-  return (searching ? (<div>
-      {personsToShow.map((person) => <Person key = {person.id} person = {person}/>)}
-    </div>): (<div>
-      {persons.map((person) => <Person key = {person.id} person = {person}/>)}
-    </div>))
+const Persons = ({searching, persons, newSearch}) => {
+  const personsShow = persons.filter(
+    (person) => {
+      if (person.name.toLowerCase().includes(newSearch) === true) return person
+    }
+  )
+  return (<div>{personsShow.map((person) => <Person key = {person.id} person = {person}/>)}
+    </div>)
 }
 
-const Filter = ({newSearch, handleSearchChange}) => {
+const Filter = ({newSearch, handleSearchChange, persons}) => {
+
+  
   return (<form>
     <div>
       filter shown with <input value={newSearch} onChange={handleSearchChange}/>
@@ -64,14 +68,7 @@ const App = () => {
       console.log(event.target.value, "target")
       const searchVal = event.target.value.toLowerCase()
       setNewSearch(event.target.value)
-      setSearching(true)
-      setPersonsToShow(persons.filter(
-        (person) => {
-          console.log(person.name.toLowerCase().includes(searchVal))
-          if (person.name.toLowerCase().includes(searchVal) === true) return person
-        }
-      ))
-      console.log(personsToShow, "showing")
+      
   }
 
   const handleNameChange = (event) => {
@@ -106,7 +103,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Filter newSearch={newSearch} handleSearchChange={handleSearchChange}/>
+      <Filter newSearch={newSearch} handleSearchChange={handleSearchChange} persons={persons}/>
       
       <h2>Add a new</h2>
       <PersonForm 
@@ -116,8 +113,9 @@ const App = () => {
         newNumber={newNumber}
         onNumberChange={handleNumberChange}
       />
+      
       <h2>Numbers</h2> 
-      <Persons personsToShow = {personsToShow} searching = {searching} persons={persons}/>
+      <Persons searching = {searching} persons={persons} newSearch={newSearch}/>
     </div>
   )
 }
