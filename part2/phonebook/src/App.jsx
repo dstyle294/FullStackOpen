@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
+
 
 const Person = (person) => {
   return (
@@ -12,6 +14,7 @@ const Person = (person) => {
 const Persons = ({searching, persons, newSearch}) => {
   const personsShow = persons.filter(
     (person) => {
+      console.log(person)
       if (person.name.toLowerCase().includes(newSearch) === true) return person
     }
   )
@@ -57,17 +60,14 @@ const App = () => {
   const [personsToShow, setPersonsToShow] = useState(persons)
 
   
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+  useEffect(() => {
+    personService 
+      .getAll()
+      .then(initialPeople => {
+        setPersons(initialPeople)
       })
-  }
-  
-  useEffect(hook, [])
+  }, [])
+
   console.log('render', persons.length, 'persons')
 
   const handleSearchChange = (event) => {
@@ -92,19 +92,25 @@ const App = () => {
     const names = persons.map(
       (person) => person.name
     )
+    
     if (names.includes(newName) === true) alert(`${newName} is already added to phonebook`)
     else {
       const personObject = {name: newName,
         number: newNumber
       }
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      personService
+        .create(personObject)
+        .then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
+            setNewName('')
+            setNewNumber('')
+        })
+    
     }
   }
   
 
-  
+
   return (
     <div>
       <h2>Phonebook</h2>
