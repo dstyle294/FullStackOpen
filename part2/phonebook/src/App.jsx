@@ -123,22 +123,27 @@ const App = () => {
         // new number
         if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
           const oldPerson = persons.find(person => person.name === newName)
+          console.log(oldPerson)
           const newPerson = {...oldPerson, number: newNumber}
-
+          console.log(newPerson)
           personService
             .update(newPerson.id, newPerson)
             .then(returnedPerson => {
               setPersons(persons.map(person => person.id === returnedPerson.id ? returnedPerson : person))
+
               setErrorMessage(`Changed ${newName}'s phone number to ${newNumber}`)
+
               setAllOk(true)
+
               setTimeout(() => {
                 setErrorMessage(null)
               }, 5000)
+
             })
             .catch(
               error => {
                 setAllOk(false)
-                setErrorMessage(`Information of ${newName} has already been removed from server`)
+                setErrorMessage(error.response.data.error)
               }
             )
           
@@ -160,6 +165,14 @@ const App = () => {
             setTimeout(() => {
               setErrorMessage(null)
             }, 5000)
+        })
+        .catch(error => {
+          console.log(error.response.data.error)
+          setErrorMessage(error.response.data.error)
+          setAllOk(false)
+          setTimeout(() => {
+              setErrorMessage(null)
+          }, 5000)
         })
     
     }
