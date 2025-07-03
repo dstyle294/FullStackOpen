@@ -1,5 +1,5 @@
 require('dotenv').config()
-const mongoose = require('mongoose')
+
 const Person = require('./models/person')
 
 

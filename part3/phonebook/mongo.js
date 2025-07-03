@@ -23,7 +23,7 @@ if (process.argv.length == 3) {
         )
         mongoose.connection.close()
     })
-} else if (process.argv.length == 5) {
+} else if (process.argv.length === 5) {
     const password = process.argv[2]
     
     const url = `mongodb+srv://skdalal:${password}@fsocluster.9rojjwa.mongodb.net/phoneApp?retryWrites=true&w=majority&appName=FSOCluster`
